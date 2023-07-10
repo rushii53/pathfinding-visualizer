@@ -59,6 +59,7 @@ export default function Node({
     ) {
       const cell = [...graph];
       cell[rowIndex][colIndex].isWall = !cell[rowIndex][colIndex].isWall;
+      cell[rowIndex][colIndex].isWeighted=false;
       setGraph(cell);
       return;
     } else if (
