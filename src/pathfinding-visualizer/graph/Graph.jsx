@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Node from "../node/node";
+import Node from "../node/Node";
 import { dijsktra, getShortestPath } from "../../algorithms/dijsktra-algorithm";
 import { depthfirst } from "../../algorithms/depth-first";
 import { breadthFirst } from "../../algorithms/breadth-first";
