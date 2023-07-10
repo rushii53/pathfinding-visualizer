@@ -1,0 +1,93 @@
+.wall{
+    height: 28px;
+    width: 28px;
+    background-color: rgb(0, 12, 72);
+    animation-duration: 0.2s;
+    animation-name: animateWall;
+}
+.destinations{
+    height: 20px;
+    width: 20px;
+    animation-duration: 1s;
+    animation-name:animateDestinations;
+}
+.path{
+    height: 28px;
+    width: 28px;
+    background-color: aqua;
+    animation-name: animatePath;
+    animation-duration: 1.5s;
+    border: none;
+}
+.shortest-path{
+    height: 28px;
+    width: 28px;
+    background-color: yellow;
+    animation:animateShortestPath;
+    animation-duration: 1.5s;
+}
+
+@keyframes animateWall{
+    from{
+        width: 0;
+        height: 0;
+    }
+    to {
+        width: 32px;
+        height: 32px;
+    }
+}
+@keyframes animatePath{
+    0%{
+        width: 0;
+        height: 0;
+        border-radius: 100%;
+        background-color: yellow;
+    }
+    25%{
+        width: 7px;
+        height: 7px;
+        border-radius: 75%;
+        background-color: rgb(255, 230, 0);
+    }
+    50%{
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: rgb(146, 22, 199);
+    }
+    75%{
+        width: 21px;
+        height: 21px;
+        border-radius: 25%;
+        background-color: blueviolet;
+    }
+    100%{
+        width: 28px;
+        height: 28px;
+        border-radius: 0;
+        background-color: aqua;
+    }
+}
+@keyframes animateDestinations{
+    from{
+        width: 5px;
+        height: 5px;
+    }
+    to{
+        width: 23px;
+        height: 23px;
+    }
+}   
+@keyframes animateShortestPath{
+    from{
+        width: 0;
+        height: 0;
+        background-color: white;
+    }
+    to{
+        width: 28px;
+        height: 28px;
+        background-color: yellow;
+    }
+}
