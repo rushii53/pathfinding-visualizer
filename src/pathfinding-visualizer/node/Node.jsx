@@ -53,13 +53,14 @@ export default function Node({
   const handleMouseEnter = () => {
     if (
       isClicked &&
-      !keyPressed && !graph[rowIndex][colIndex].isWeighted &&
+      !keyPressed &&
+      !graph[rowIndex][colIndex].isWeighted &&
       !graph[rowIndex][colIndex].isStartNode &&
       !graph[rowIndex][colIndex].isEndNode
     ) {
       const cell = [...graph];
       cell[rowIndex][colIndex].isWall = !cell[rowIndex][colIndex].isWall;
-      cell[rowIndex][colIndex].isWeighted=false;
+      cell[rowIndex][colIndex].isWeighted = false;
       setGraph(cell);
       return;
     } else if (
@@ -69,17 +70,18 @@ export default function Node({
       !graph[rowIndex][colIndex].isEndNode
     ) {
       const cell = [...graph];
-      cell[rowIndex][colIndex].isWeighted = !cell[rowIndex][colIndex].isWeighted;
-      cell[rowIndex][colIndex].isWall=false;
+      cell[rowIndex][colIndex].isWeighted =
+        !cell[rowIndex][colIndex].isWeighted;
+      cell[rowIndex][colIndex].isWall = false;
       setGraph(cell);
       return;
-    } else if (isStartSelected) {
+    } else if (isStartSelected && !graph[rowIndex][colIndex].isEndNode) {
       const cell = [...graph];
       cell[rowIndex][colIndex].isStartNode = true;
       cell[rowIndex][colIndex].isWall = false;
       setGraph(cell);
       return;
-    } else if (isEndSelected) {
+    } else if (isEndSelected && !graph[rowIndex][colIndex].isStartNode) {
       const cell = [...graph];
       cell[rowIndex][colIndex].isEndNode = true;
       cell[rowIndex][colIndex].isWall = false;
@@ -110,13 +112,9 @@ export default function Node({
       >
         <div
           className={`m-auto justify-center items-center flex ${
-            graph[rowIndex][colIndex].isWall ? "wall z-20" : ""
+            graph[rowIndex][colIndex].isWall ? "wall z-10" : ""
           } ${graph[rowIndex][colIndex].isPath ? "path" : ""}
-            ${
-              graph[rowIndex][colIndex].isShortestPath
-                ? "shortest-path z-30"
-                : ""
-            }`}
+            ${graph[rowIndex][colIndex].isShortestPath ? "shortest-path" : ""}`}
         >
           {graph[rowIndex][colIndex].isStartNode ? (
             <FontAwesomeIcon
@@ -131,7 +129,11 @@ export default function Node({
               style={{ color: "#1159d4" }}
             />
           ) : graph[rowIndex][colIndex].isWeighted ? (
-            <FontAwesomeIcon icon={faWeightHanging} style={{color: "#00328a",}} />
+            <FontAwesomeIcon
+              className="weight"
+              icon={faWeightHanging}
+              style={{ color: "#00328a" }}
+            />
           ) : (
             ""
           )}

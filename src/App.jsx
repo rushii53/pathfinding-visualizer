@@ -1,16 +1,14 @@
-import { Dashboard } from "./pathfinding-visualizer/components/Dashboard"
-import { BoardContext } from "./pathfinding-visualizer/contexts/BoardContext"
-import Graph from "./pathfinding-visualizer/graph/Graph";
+import { Parent } from "./pathfinding-visualizer/components/Parent";
+import { BoardContext } from "./pathfinding-visualizer/contexts/BoardContext";
 
 function App() {
   return (
     <>
       <BoardContext>
-        <Dashboard/>
-        <Graph/>
+        <Parent />
       </BoardContext>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

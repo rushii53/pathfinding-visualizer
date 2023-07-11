@@ -1,4 +1,4 @@
-export const dijsktra=(graph,startNode)=>{
+export const dijkstra=(graph,startNode)=>{
     startNode.distance=0;
     let unvisitedNodes=[];
     const visitedNodesInOrder=[];

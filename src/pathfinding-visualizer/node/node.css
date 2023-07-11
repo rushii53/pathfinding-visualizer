@@ -11,6 +11,12 @@
     animation-duration: 1s;
     animation-name:animateDestinations;
 }
+.weight{
+    height: 20px;
+    width: 20px;
+    animation-duration: 0.5s;
+    animation-name: animateWeight;
+}
 .path{
     height: 28px;
     width: 28px;
@@ -89,5 +95,15 @@
         width: 28px;
         height: 28px;
         background-color: yellow;
+    }
+}
+@keyframes animateWeight{
+    from{
+        height:5px;
+        width:5px
+    }
+    to{
+        height: 20px;
+        width: 20px;
     }
 }
