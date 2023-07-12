@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Node from "../node/Node";
 import { useBoardContext } from "../contexts/BoardContext";
 
-export default function Graph() {
-  const { graph,startNode,endNode,setGraph,setStartNode,setEndNode } = useBoardContext();
+export default function Graph({ selectedAlgo }) {
+  const { graph, startNode, endNode, setGraph } = useBoardContext();
   const [isClicked, setClicked] = useState(false);
   const [isStartSelected, setStartSelected] = useState(false);
   const [isEndSelected, setEndSelected] = useState(false);
@@ -62,8 +62,6 @@ export default function Graph() {
                     setStartSelected={setStartSelected}
                     isEndSelected={isEndSelected}
                     setEndSelected={setEndSelected}
-                    setStartNode={setStartNode}
-                    setEndNode={setEndNode}
                     keyPressed={keyPressed}
                   />
                 </div>

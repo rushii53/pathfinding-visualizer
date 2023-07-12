@@ -85,7 +85,7 @@ export const Parent = () => {
   return (
     <>
       <Dashboard selectedAlgo={selectedAlgo} setAboutAlgo={setAboutAlgo} setAlgo={setAlgo} visualizeAlgorithms={visualizeAlgorithms} />
-      <Body aboutAlgo={aboutAlgo} />
+      <Body aboutAlgo={aboutAlgo} selectedAlgo={selectedAlgo} />
     </>
   );
 };

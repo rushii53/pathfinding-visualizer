@@ -5,6 +5,8 @@ import {
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useBoardContext } from "../contexts/BoardContext";
+import { useState } from "react";
 export default function Node({
   graph,
   setGraph,
@@ -16,91 +18,84 @@ export default function Node({
   setStartSelected,
   isEndSelected,
   setEndSelected,
-  setStartNode,
-  setEndNode,
   keyPressed,
 }) {
+  const { setEndNode, setStartNode } = useBoardContext();
+  const [isWall, setWall] = useState(false);
+  const [isWeighted, setWeighted] = useState(false);
   const handleMouseDown = () => {
-    if (graph[rowIndex][colIndex].isStartNode) {
+    const cell = graph[rowIndex][colIndex];
+    setClicked(true);
+    if (cell.isStartNode) {
       setStartSelected(true);
-    } else if (graph[rowIndex][colIndex].isEndNode) {
+    } else if (cell.isEndNode) {
       setEndSelected(true);
+    } else if (keyPressed && !isStartSelected && !isEndSelected) {
+      const grid = [...graph];
+      grid[rowIndex][colIndex].isWeighted =
+        !graph[rowIndex][colIndex].isWeighted;
+      grid[rowIndex][colIndex].isWall = false;
+      setGraph(grid);
     } else {
-      setClicked(true);
-    }
-    if (
-      isClicked &&
-      !graph[rowIndex][colIndex].isStartNode &&
-      !graph[rowIndex][colIndex].isEndNode
-    ) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isWall = !cell[rowIndex][colIndex].isWall;
-      setGraph(cell);
-    }
-  };
-  const handleMouseUp = () => {
-    if (isClicked) {
-      setClicked(false);
-    } else if (isStartSelected) {
-      setStartNode({ rowIndex, colIndex });
-      setStartSelected(false);
-    } else if (isEndSelected) {
-      setEndNode({ rowIndex, colIndex });
-      setEndSelected(false);
+      const grid = [...graph];
+      graph[rowIndex][colIndex].isWall = !graph[rowIndex][colIndex].isWall;
+      graph[rowIndex][colIndex].isWeighted = false;
+      setGraph(grid);
     }
   };
 
   const handleMouseEnter = () => {
     if (
       isClicked &&
-      !keyPressed &&
-      !graph[rowIndex][colIndex].isWeighted &&
+      !isStartSelected &&
+      !isEndSelected &&
       !graph[rowIndex][colIndex].isStartNode &&
       !graph[rowIndex][colIndex].isEndNode
     ) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isWall = !cell[rowIndex][colIndex].isWall;
-      cell[rowIndex][colIndex].isWeighted = false;
-      setGraph(cell);
-      return;
-    } else if (
-      isClicked &&
-      keyPressed &&
-      !graph[rowIndex][colIndex].isStartNode &&
-      !graph[rowIndex][colIndex].isEndNode
-    ) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isWeighted =
-        !cell[rowIndex][colIndex].isWeighted;
-      cell[rowIndex][colIndex].isWall = false;
-      setGraph(cell);
-      return;
-    } else if (isStartSelected && !graph[rowIndex][colIndex].isEndNode) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isStartNode = true;
-      cell[rowIndex][colIndex].isWall = false;
-      setGraph(cell);
-      return;
-    } else if (isEndSelected && !graph[rowIndex][colIndex].isStartNode) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isEndNode = true;
-      cell[rowIndex][colIndex].isWall = false;
-      setGraph(cell);
-      return;
+      const grid = [...graph];
+      if (keyPressed) {
+        grid[rowIndex][colIndex].isWeighted =
+          !graph[rowIndex][colIndex].isWeighted;
+        grid[rowIndex][colIndex].isWall = false;
+      } else {
+        graph[rowIndex][colIndex].isWall = !graph[rowIndex][colIndex].isWall;
+        graph[rowIndex][colIndex].isWeighted = false;
+      }
+      setGraph(grid);
+    } else if ((isStartSelected || isEndSelected) && isClicked) {
+      const grid = [...graph];
+      if (isStartSelected) grid[rowIndex][colIndex].isStartNode = true;
+      else grid[rowIndex][colIndex].isEndNode = true;
+      setWall(grid[rowIndex][colIndex].isWall);
+      setWeighted(grid[rowIndex][colIndex].isWeighted);
+      graph[rowIndex][colIndex].isWall = false;
+      graph[rowIndex][colIndex].isWeighted = false;
+      setGraph(grid);
     }
   };
 
   const handleMouseLeave = () => {
-    if (isStartSelected) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isStartNode = false;
-      setGraph(cell);
-    } else if (isEndSelected) {
-      const cell = [...graph];
-      cell[rowIndex][colIndex].isEndNode = false;
-      setGraph(cell);
+    if (isClicked && (isStartSelected || isEndSelected)) {
+      const grid = [...graph];
+      grid[rowIndex][colIndex].isStartNode = false;
+      grid[rowIndex][colIndex].isEndNode = false;
+      grid[rowIndex][colIndex].isWall = isWall;
+      grid[rowIndex][colIndex].isWeighted = isWeighted;
+      setGraph(grid);
     }
   };
+
+  const handleMouseUp = () => {
+    setClicked(false);
+    if (isStartSelected) {
+      setStartNode({ row: rowIndex, col: colIndex });
+      setStartSelected(false);
+    } else if (isEndSelected) {
+      setEndNode({ row: rowIndex, col: colIndex });
+      setEndSelected(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -111,7 +106,7 @@ export default function Node({
         onMouseLeave={() => handleMouseLeave()}
       >
         <div
-          className={`m-auto justify-center items-center flex ${
+          className={`justify-center items-center flex ${
             graph[rowIndex][colIndex].isWall ? "wall z-10" : ""
           } ${graph[rowIndex][colIndex].isPath ? "path" : ""}
             ${graph[rowIndex][colIndex].isShortestPath ? "shortest-path" : ""}`}

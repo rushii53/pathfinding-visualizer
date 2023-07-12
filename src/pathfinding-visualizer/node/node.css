@@ -2,7 +2,7 @@
     height: 28px;
     width: 28px;
     background-color: rgb(0, 12, 72);
-    animation-duration: 0.2s;
+    animation-duration: 0.3s;
     animation-name: animateWall;
 }
 .destinations{
@@ -14,15 +14,16 @@
 .weight{
     height: 20px;
     width: 20px;
-    animation-duration: 0.5s;
+    animation-duration: 0.1s;
     animation-name: animateWeight;
 }
 .path{
     height: 28px;
     width: 28px;
-    background-color: aqua;
+    background-color: rgba(88, 136, 248, 0.872);
     animation-name: animatePath;
     animation-duration: 1.5s;
+    animation-timing-function: ease-out;
     border: none;
 }
 .shortest-path{
@@ -34,46 +35,36 @@
 }
 
 @keyframes animateWall{
-    from{
-        width: 0;
-        height: 0;
+    0%{
+        transform: scale(0.5);
     }
-    to {
-        width: 32px;
-        height: 32px;
+    50%{
+        transform: scale(1.1);
+    }
+    100%{
+        transform: scale(1);
     }
 }
 @keyframes animatePath{
-    0%{
-        width: 0;
-        height: 0;
-        border-radius: 100%;
+    0% {
+        transform: scale(0.3);
         background-color: yellow;
-    }
-    25%{
-        width: 7px;
-        height: 7px;
-        border-radius: 75%;
-        background-color: rgb(255, 230, 0);
-    }
-    50%{
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background-color: rgb(146, 22, 199);
-    }
-    75%{
-        width: 21px;
-        height: 21px;
-        border-radius: 25%;
-        background-color: blueviolet;
-    }
-    100%{
-        width: 28px;
-        height: 28px;
-        border-radius: 0;
-        background-color: aqua;
-    }
+        border-radius: 100%;
+      }
+    
+      50% {
+        background-color: rgba(17, 104, 217, 0.75);
+      }
+    
+      75% {
+        transform: scale(1.2);
+        background-color: rgb(55, 114, 250);
+      }
+    
+      100% {
+        transform: scale(1);
+        background-color: rgb(88, 136, 248);
+      }
 }
 @keyframes animateDestinations{
     from{
@@ -86,24 +77,26 @@
     }
 }   
 @keyframes animateShortestPath{
-    from{
-        width: 0;
-        height: 0;
+    0%{
+        transform: scale(0.3);
+        border-radius: 100%;
         background-color: white;
     }
-    to{
-        width: 28px;
-        height: 28px;
+    50%{
+        transform: scale(1.2);
+        background-color: rgba(232, 232, 5, 0.858);
+        border: white;
+    }
+    100%{
+        transform: scale(1);
         background-color: yellow;
     }
 }
 @keyframes animateWeight{
     from{
-        height:5px;
-        width:5px
+        transform: scale(0.2);
     }
     to{
-        height: 20px;
-        width: 20px;
+        transform: scale(1);
     }
 }

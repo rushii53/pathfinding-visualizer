@@ -2,6 +2,7 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "@headlessui/react";
 import { useBoardContext } from "../contexts/BoardContext";
+import { useEffect } from "react";
 
 const algorithms = [
   { id: 1, name: "Dijkstra's Algorithm", value: "Dijkstra" },
@@ -14,12 +15,21 @@ export const Dashboard = ({
   setAlgo,
   visualizeAlgorithms,
 }) => {
-  const { graph, setGraph, startNode, endNode } = useBoardContext();
+  const { graph, setGraph, startNode, endNode, setStartNode, setEndNode } =
+    useBoardContext();
+
+  useEffect(() => {
+    if (selectedAlgo == "BFS" || selectedAlgo == "DFS") clearGraph("weights");
+  }, [selectedAlgo]);
 
   const handleClick = () => {
     visualizeAlgorithms(selectedAlgo);
   };
   const clearGraph = (value) => {
+    if (value == "board") {
+      setStartNode({ row: 10, col: 9 });
+      setEndNode({ row: 10, col: 40 });
+    }
     let grid = [...graph];
     let isWeighted, isWall;
     for (let row = 0; row < 22; row++) {
@@ -29,6 +39,9 @@ export const Dashboard = ({
         if (value == "walls" || value == "board") {
           isWeighted = false;
           isWall = false;
+        }
+        if (value == "weights") {
+          isWeighted = false;
         }
         (grid[row][col].row = row),
           (grid[row][col].col = col),
@@ -65,8 +78,8 @@ export const Dashboard = ({
           <>
             Breadth-first Search is{" "}
             <span className="italic font-bold mx-1">unweighted</span> and{" "}
-            <span className="italic font-bold mx-1">garantees</span> the shortest
-            path!
+            <span className="italic font-bold mx-1">garantees</span> the
+            shortest path!
           </>
         );
         break;
@@ -111,7 +124,10 @@ export const Dashboard = ({
                       return (
                         <Menu.Item key={algorithm.id}>
                           <div
-                            onClick={() => setAlgorithm(algorithm.value)}
+                            onClick={() => {
+                              clearGraph("path");
+                              setAlgorithm(algorithm.value);
+                            }}
                             className="p-1 rounded hover:bg-emerald-400"
                           >
                             {algorithm.name}
@@ -135,7 +151,7 @@ export const Dashboard = ({
                 onClick={() => clearGraph("board")}
                 className="px-3 mx-2 hover:text-emerald-400"
               >
-                Clear Board
+                Reset Board
               </button>
               <button
                 onClick={() => clearGraph("walls")}
