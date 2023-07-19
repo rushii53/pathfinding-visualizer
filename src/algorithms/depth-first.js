@@ -2,8 +2,8 @@ export const depthfirst=(graph,startNode)=>{
     let visitedNodesInOrder=[]
     startNode.distance=0;
     visitedNodesInOrder.push(startNode);
-    dfs(graph,startNode,visitedNodesInOrder);
-    return visitedNodesInOrder;
+    let isFound=dfs(graph,startNode,visitedNodesInOrder);
+    return {isFound,visitedNodesInOrder};
 }
 
 const dfs=(graph,currentNode,visitedNodesInOrder)=>{
@@ -19,6 +19,7 @@ const dfs=(graph,currentNode,visitedNodesInOrder)=>{
         if(dfs(graph,neigbour,visitedNodesInOrder))
             return true;
     }
+    return false;
 }
 
 const getNeighborNodes=(graph,currentNode)=>{

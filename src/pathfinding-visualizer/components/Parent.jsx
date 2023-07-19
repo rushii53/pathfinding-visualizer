@@ -5,11 +5,14 @@ import { dijkstra, getShortestPath } from "../../algorithms/dijkstra-algorithm";
 import { useBoardContext } from "../contexts/BoardContext";
 import { Body } from "./Body";
 import { Dashboard } from "./Dashboard";
+import { aStar } from "../../algorithms/a-star";
 
 export const Parent = () => {
-  const { graph, setGraph, startNode, endNode } = useBoardContext();
+  const { graph, setGraph, startNode, endNode ,setRunning} = useBoardContext();
   const [selectedAlgo, setAlgo] = useState("Algorithms");
-  const [aboutAlgo,setAboutAlgo]=useState('Select an algorithm and visualize it!');
+  const [aboutAlgo, setAboutAlgo] = useState(
+    "Select an algorithm and visualize it!"
+  );
 
   //this function will animate all the visited nodes
   const animateAllPaths = (visitedNodes) => {
@@ -30,62 +33,69 @@ export const Parent = () => {
 
   //this function will animate the shortest path
   const animateShortestPath = (shortesPath) => {
-    for (let index = 0; index < shortesPath.length; index++) {
-      const node = shortesPath[index];
-      setTimeout(() => {
-        const animate = [...graph];
-        animate[node.row][node.col].isShortestPath = true;
-        setGraph(animate);
-      }, 50 * index);
-    }
+    return new Promise((resolve) => {
+      for (let index = 0; index < shortesPath.length; index++) {
+        const node = shortesPath[index];
+        setTimeout(() => {
+          const animate = [...graph];
+          animate[node.row][node.col].isShortestPath = true;
+          setGraph(animate);
+          if (index == shortesPath.length - 1) resolve();
+        }, 50 * index);
+      }
+    });
   };
 
-  //function to visualize Dijkstra's algorithm
-  const visualizeDijkstra = async () => {
-    const visitedNodes = dijkstra(graph, graph[startNode.row][startNode.col]);
-    await animateAllPaths(visitedNodes);
-    const shortesPath = getShortestPath(graph[endNode.row][endNode.col]);
-    animateShortestPath(shortesPath);
-  };
-
-  //function to visualize depth-first search algorithm
-  const visualizeDfs = async () => {
-    const visitedNodes = depthfirst(graph, graph[startNode.row][startNode.col]);
-    await animateAllPaths(visitedNodes);
-    animateShortestPath(visitedNodes);
-  };
-
-  //function to visualize depth-first search algorithm
-  const visualizeBfs = async () => {
-    const visitedNodes = breadthFirst(
-      graph,
-      graph[startNode.row][startNode.col]
-    );
-    await animateAllPaths(visitedNodes);
-    const shortesPath = getShortestPath(graph[endNode.row][endNode.col]);
-    animateShortestPath(shortesPath);
-  };
-
+ 
   const visualizeAlgorithms = async (algorithm) => {
+    setRunning(true);
+    let isFound,visitedNodesInOrder;
     switch (algorithm) {
       case "Dijkstra":
-        visualizeDijkstra();
+        const dijkstraResult = dijkstra(graph, graph[startNode.row][startNode.col]);
+        isFound=dijkstraResult.isFound;
+        visitedNodesInOrder=dijkstraResult.visitedNodesInOrder;
+        break;
+      case "AStar":
+        const AStarResult=aStar(graph,graph[startNode.row][startNode.col],graph[endNode.row][endNode.col]);
+        isFound=AStarResult.isFound;
+        visitedNodesInOrder=AStarResult.visitedNodesInOrder;
         break;
       case "BFS":
-        visualizeBfs();
+        const BfsResult=breadthFirst(graph,graph[startNode.row][startNode.col]);
+        isFound=BfsResult.isFound;
+        visitedNodesInOrder=BfsResult.visitedNodesInOrder;
         break;
       case "DFS":
-        visualizeDfs();
+        const DfsResult=depthfirst(graph, graph[startNode.row][startNode.col]);
+        isFound=DfsResult.isFound;
+        visitedNodesInOrder=DfsResult.visitedNodesInOrder;
         break;
       default:
         break;
     }
+
+
+    
+    //animate all the visited nodes and the shortest path
+    await animateAllPaths(visitedNodesInOrder);
+    //if shortest path found then
+    if(isFound){
+      const shortesPath = getShortestPath(graph[endNode.row][endNode.col]);
+      await animateShortestPath(shortesPath);
+    }
+    setRunning(false);
   };
 
   return (
     <>
-      <Dashboard selectedAlgo={selectedAlgo} setAboutAlgo={setAboutAlgo} setAlgo={setAlgo} visualizeAlgorithms={visualizeAlgorithms} />
-      <Body aboutAlgo={aboutAlgo} selectedAlgo={selectedAlgo} />
+      <Dashboard
+        selectedAlgo={selectedAlgo}
+        setAboutAlgo={setAboutAlgo}
+        setAlgo={setAlgo}
+        visualizeAlgorithms={visualizeAlgorithms}
+      />
+      <Body aboutAlgo={aboutAlgo} />
     </>
   );
 };

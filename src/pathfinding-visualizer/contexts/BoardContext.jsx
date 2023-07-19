@@ -9,6 +9,10 @@ const BoardStateContext = createContext({
   setStartNode: () => {},
   endNode: {},
   setEndNode: () => {},
+  isRunning: false,
+  setRunning: () => {},
+  noWeights:false,
+  setNoWeights:()=>{}
 });
 
 export const BoardContext = ({ children }) => {
@@ -22,9 +26,27 @@ export const BoardContext = ({ children }) => {
     row: 10,
     col: 40,
   });
+  const [isRunning,setRunning]=useState(false);
+  const [isCompleted,setCompleted]=useState(false);
+  const [noWeights,setNoWeights]=useState(false);
   return (
     <BoardStateContext.Provider
-      value={{ isClicked, setIsClicked, graph, setGraph , startNode, setStartNode, endNode,setEndNode}}
+      value={{
+        isClicked,
+        setIsClicked,
+        graph,
+        setGraph,
+        startNode,
+        setStartNode,
+        endNode,
+        setEndNode,
+        isRunning,
+        setRunning,
+        isCompleted,
+        setCompleted,
+        noWeights,
+        setNoWeights
+      }}
     >
       {children}
     </BoardStateContext.Provider>

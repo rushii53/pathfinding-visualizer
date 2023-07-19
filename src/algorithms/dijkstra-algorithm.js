@@ -2,6 +2,7 @@ export const dijkstra=(graph,startNode)=>{
     startNode.distance=0;
     let unvisitedNodes=[];
     const visitedNodesInOrder=[];
+    let isFound=false;
     unvisitedNodes.push(startNode);
     while(unvisitedNodes.length){
         unvisitedNodes=sortNodeByDistance(unvisitedNodes);
@@ -9,7 +10,13 @@ export const dijkstra=(graph,startNode)=>{
         if (currentNode.isWall || currentNode.isVisited) continue;
         currentNode.isVisited=true;
         visitedNodesInOrder.push(currentNode);
-        if(currentNode.isEndNode) return visitedNodesInOrder;
+        if(currentNode.isEndNode){
+            isFound=true;
+            return{
+                isFound,
+                visitedNodesInOrder
+            }
+        };
         const unvisitedNeighbourNodes=getUnvisitedNeighbourNode(graph,currentNode);
         for(const neighbour of unvisitedNeighbourNodes){
             if(neighbour.isWeighted){
@@ -22,7 +29,10 @@ export const dijkstra=(graph,startNode)=>{
             unvisitedNodes.push(neighbour);
         }
     }
-    return visitedNodesInOrder;
+    return {
+        isFound,
+        visitedNodesInOrder
+    };
 }
 
 const sortNodeByDistance=(unvisitedNodes)=>{
@@ -42,6 +52,9 @@ const getUnvisitedNeighbourNode=(graph,node)=>{
 export const getShortestPath=(endNode)=>{
     const shortestPath=[];
     let currentNode=endNode;
+    if(currentNode.previousNode==null){
+        return shortestPath;
+    }
     while(currentNode!=null){
         shortestPath.push(currentNode);
         currentNode=currentNode.previousNode;

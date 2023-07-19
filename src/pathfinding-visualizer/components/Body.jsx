@@ -6,7 +6,7 @@ import {
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const Body = ({ aboutAlgo, selectedAlgo }) => {
+export const Body = ({ aboutAlgo}) => {
   return (
     <>
       <div className="h-12 text-blue-900  px-5 w-full justify-center flex">
@@ -48,7 +48,7 @@ export const Body = ({ aboutAlgo, selectedAlgo }) => {
       <div className="h-6 m-3 flex justify-center text-xl text-center text-gray-500 w-full">
         {aboutAlgo}
       </div>
-      <Graph selectedAlgo={selectedAlgo} />
+      <Graph/>
     </>
   );
 };

@@ -20,17 +20,19 @@ export default function Node({
   setEndSelected,
   keyPressed,
 }) {
-  const { setEndNode, setStartNode } = useBoardContext();
+  const { setEndNode, setStartNode,isRunning,noWeights} = useBoardContext();
   const [isWall, setWall] = useState(false);
   const [isWeighted, setWeighted] = useState(false);
   const handleMouseDown = () => {
+    if(isRunning)
+      return;
     const cell = graph[rowIndex][colIndex];
     setClicked(true);
     if (cell.isStartNode) {
       setStartSelected(true);
     } else if (cell.isEndNode) {
       setEndSelected(true);
-    } else if (keyPressed && !isStartSelected && !isEndSelected) {
+    } else if (keyPressed && !isStartSelected && !isEndSelected && !noWeights) {
       const grid = [...graph];
       grid[rowIndex][colIndex].isWeighted =
         !graph[rowIndex][colIndex].isWeighted;
@@ -53,7 +55,7 @@ export default function Node({
       !graph[rowIndex][colIndex].isEndNode
     ) {
       const grid = [...graph];
-      if (keyPressed) {
+      if (keyPressed && !noWeights) {
         grid[rowIndex][colIndex].isWeighted =
           !graph[rowIndex][colIndex].isWeighted;
         grid[rowIndex][colIndex].isWall = false;

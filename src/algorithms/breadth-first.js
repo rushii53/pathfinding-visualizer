@@ -1,14 +1,20 @@
 export const breadthFirst=(graph,startNode)=>{
     const visitedNodesInOrder=[];
     const unvisitedNodes=[];
+    let isFound=false;
     unvisitedNodes.push(startNode);
     while(unvisitedNodes.length>0){
         let currentNode=unvisitedNodes.shift();
         if (currentNode.isWall || currentNode.isVisited) continue;
         currentNode.isVisited=true;
         visitedNodesInOrder.push(currentNode);
-        if(currentNode.isEndNode)
-            return visitedNodesInOrder;
+        if(currentNode.isEndNode){
+            isFound=true;
+            return {
+                isFound,
+                visitedNodesInOrder
+            }
+        }
         let neigbourNodes=getNegibourNodes(graph,currentNode);
         for(const neigbour of neigbourNodes){
             neigbour.distance=currentNode.distance+1;
@@ -16,7 +22,7 @@ export const breadthFirst=(graph,startNode)=>{
             unvisitedNodes.push(neigbour);
         }
     }
-    return visitedNodesInOrder;
+    return {isFound,visitedNodesInOrder};
 }
 
 const getNegibourNodes=(graph,node)=>{

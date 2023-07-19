@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import Node from "../node/Node";
 import { useBoardContext } from "../contexts/BoardContext";
 
-export default function Graph({ selectedAlgo }) {
-  const { graph, startNode, endNode, setGraph } = useBoardContext();
+export default function Graph() {
+  const { graph, startNode, endNode, setGraph} = useBoardContext();
   const [isClicked, setClicked] = useState(false);
   const [isStartSelected, setStartSelected] = useState(false);
   const [isEndSelected, setEndSelected] = useState(false);
   const [keyPressed, setKeyPressed] = useState(false);
-
   useEffect(() => {
     //initial grid
     let rowMatrix = [];
@@ -27,6 +26,7 @@ export default function Graph({ selectedAlgo }) {
           distance: Infinity,
           isShortestPath: false,
           previousNode: null,
+          heuristicDistance:null,
         });
       }
       rowMatrix.push(rowData);

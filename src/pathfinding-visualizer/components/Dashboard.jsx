@@ -6,22 +6,31 @@ import { useEffect } from "react";
 
 const algorithms = [
   { id: 1, name: "Dijkstra's Algorithm", value: "Dijkstra" },
-  { id: 2, name: "Breadth-first Search", value: "BFS" },
-  { id: 3, name: "Depth-first Search", value: "DFS" },
+  { id: 2, name: "A* Search", value: "AStar" },
+  { id: 3, name: "Breadth-first Search", value: "BFS" },
+  { id: 4, name: "Depth-first Search", value: "DFS" },
 ];
+
 export const Dashboard = ({
   selectedAlgo,
   setAboutAlgo,
   setAlgo,
   visualizeAlgorithms,
 }) => {
-  const { graph, setGraph, startNode, endNode, setStartNode, setEndNode } =
-    useBoardContext();
-
+  const {
+    graph,
+    setGraph,
+    startNode,
+    endNode,
+    setStartNode,
+    setEndNode,
+    isRunning,
+    setNoWeights
+  } = useBoardContext();
   useEffect(() => {
     if (selectedAlgo == "BFS" || selectedAlgo == "DFS") clearGraph("weights");
   }, [selectedAlgo]);
-
+  
   const handleClick = () => {
     visualizeAlgorithms(selectedAlgo);
   };
@@ -54,7 +63,8 @@ export const Dashboard = ({
           (grid[row][col].distance = Infinity),
           (grid[row][col].isShortestPath = false),
           (grid[row][col].isPath = false),
-          (grid[row][col].previousNode = null);
+          (grid[row][col].previousNode = null),
+          (grid[row][col].heuristicDistance = null);
       }
     }
     setGraph(grid);
@@ -72,6 +82,18 @@ export const Dashboard = ({
             path!
           </>
         );
+        setNoWeights(false);
+        break;
+      case "AStar":
+        setAboutAlgo(
+          <>
+            A* Search is <span className="italic font-bold mx-1">weighted</span>{" "}
+            and
+            <span className="italic font-bold mx-1">garantees</span> shortest
+            path!
+          </>
+        );
+        setNoWeights(false);
         break;
       case "BFS":
         setAboutAlgo(
@@ -82,6 +104,7 @@ export const Dashboard = ({
             shortest path!
           </>
         );
+        setNoWeights(true);
         break;
       case "DFS":
         setAboutAlgo(
@@ -92,7 +115,9 @@ export const Dashboard = ({
             shortest path!
           </>
         );
+        setNoWeights(true);
       default:
+        setAboutAlgo(<>Select an algorithm and visualize it!</>);
         break;
     }
   };
@@ -111,8 +136,9 @@ export const Dashboard = ({
             <div className="h-full z-20 w-56 p-1" style={{ cursor: "pointer" }}>
               <Menu>
                 <Menu.Button
+                  disabled={isRunning}
                   className={
-                    "h-full font-semibold rounded w-full hover:text-emerald-400"
+                    `h-full font-semibold rounded w-full ${isRunning?'hover:text-red-500':'hover:text-emerald-400'}`
                   }
                 >
                   Algorithms
@@ -142,26 +168,30 @@ export const Dashboard = ({
             <div className="h-full p-1 flex font-semibold">
               <button
                 onClick={() => handleClick()}
-                className="px-3 mx-2 bg-emerald-400 hover:bg-emerald-300"
+                disabled={isRunning}
+                className={`px-3 mx-2 ${isRunning?'bg-emerald-700':'bg-emerald-400 hover:bg-emerald-300'}`}
               >
                 Visualize{" "}
                 {selectedAlgo != "Algorithms" ? selectedAlgo + "!" : ""}
               </button>
               <button
                 onClick={() => clearGraph("board")}
-                className="px-3 mx-2 hover:text-emerald-400"
+                disabled={isRunning}
+                className={`px-3 mx-2 ${isRunning?'hover:text-red-500': 'hover:text-emerald-400'}`}
               >
                 Reset Board
               </button>
               <button
                 onClick={() => clearGraph("walls")}
-                className="px-3 mx-2 hover:text-emerald-400"
+                disabled={isRunning}
+                className={`px-3 mx-2 ${isRunning?'hover:text-red-500': 'hover:text-emerald-400'}`}
               >
                 Clear Walls & Weights
               </button>
               <button
                 onClick={() => clearGraph("path")}
-                className="px-3 mx-2 hover:text-emerald-400"
+                disabled={isRunning}
+                className={`px-3 mx-2 ${isRunning?'hover:text-red-500': 'hover:text-emerald-400'}`}
               >
                 Clear Path
               </button>
