@@ -32,7 +32,9 @@ export const Dashboard = ({
   }, [selectedAlgo]);
   
   const handleClick = () => {
-    visualizeAlgorithms(selectedAlgo);
+    if(selectedAlgo!='Algorithms'){
+      visualizeAlgorithms(selectedAlgo);
+    }
   };
   const clearGraph = (value) => {
     if (value == "board") {
